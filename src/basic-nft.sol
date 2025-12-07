@@ -15,8 +15,8 @@ s_tokenCounter = 0;
 
 }
 
-function mintNft(string memory tokenURI) external {
-  s_tokenURI[s_tokenCounter] = tokenURI;
+function mintNft(string memory _tokenURI) external {
+  s_tokenURI[s_tokenCounter] = _tokenURI;
   _safeMint(msg.sender, s_tokenCounter);
   s_tokenCounter++;
 }
