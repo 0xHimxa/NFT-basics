@@ -1,15 +1,20 @@
 //SPDX-License-Identifier:MIT
 pragma solidity ^0.8.18;
-
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 //instead of using terminal we can use this from open they do same thing
 import {Base64} from "@openzeppelin/contracts/utils/Base64.sol";
 
-contract MoodNft is ERC721 {
+contract MoodNft is ERC721,Ownable {
+
+error MoodNft__CantFlipMoodIfNotOwner();
+
+
+
     enum Mood {
         Happy,
-        sad
+        Sad
     }
 
     uint256 private s_tokenCounter;
@@ -21,7 +26,7 @@ contract MoodNft is ERC721 {
     constructor(
         string memory sadSvgImgUri,
         string memory happySvgImgUri
-    ) ERC721("Mood NFT", "MN") {
+    ) ERC721("Mood NFT", "MN") Ownable(msg.sender){
         s_tokenCounter = 0;
         s_happSvgImageUri = happySvgImgUri;
         s_sadSvgImageUri = sadSvgImgUri;
@@ -32,6 +37,42 @@ contract MoodNft is ERC721 {
         s_tokenIdToMood[s_tokenCounter] = Mood.Happy;
         s_tokenCounter++;
     }
+
+
+
+
+
+
+function fleepMood(uint256 tokenId) public{
+
+// only want the NFT ownner to be able to change the mood
+//in the ERC721 they have fn that allow to check such thing;
+
+        if (getApproved(tokenId) != msg.sender && ownerOf(tokenId) != msg.sender) {
+                revert MoodNft__CantFlipMoodIfNotOwner();
+
+        }
+
+
+if(s_tokenIdToMood[tokenId] == Mood.Happy){
+    s_tokenIdToMood[tokenId] = Mood.Sad;
+}else{
+    s_tokenIdToMood[tokenId] = Mood.Happy;
+}
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
 
     function _baseURI() internal pure override returns (string memory) {
         // we will use the in the fn below so that browers can read the imgl;mj
