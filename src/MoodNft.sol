@@ -43,7 +43,7 @@ error MoodNft__CantFlipMoodIfNotOwner();
 
 
 
-function fleepMood(uint256 tokenId) public{
+function flipMood(uint256 tokenId) public{
 
 // only want the NFT ownner to be able to change the mood
 //in the ERC721 they have fn that allow to check such thing;
